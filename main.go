@@ -7,7 +7,6 @@ import (
 
 func main() {
 	r := gin.Default()
-	// 初始化路由
-	routers.InitRouter(r)
+	
 	r.Run(":8080")
 }
