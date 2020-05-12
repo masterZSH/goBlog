@@ -13,6 +13,11 @@ type AppConfig struct {
 	Port int
 }
 
+// GetPort 获取端口祖父串 ":8080"
+func (app *AppConfig) GetPort() string {
+	return fmt.Sprintf(":%d", app.Port)
+}
+
 // AppConf 当前项目配置
 var AppConf = &AppConfig{}
 
