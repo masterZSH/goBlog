@@ -2,6 +2,7 @@ package configs
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"gopkg.in/ini.v1"
@@ -13,6 +14,15 @@ type AppConfig struct {
 	Port int
 }
 
+// MongoConfig mongo配置
+type MongoConfig struct {
+	Host    string
+	Port    int
+	User    string
+	Pwd     string
+	TimeOut int
+}
+
 // GetPort 获取端口祖父串 ":8080"
 func (app *AppConfig) GetPort() string {
 	return fmt.Sprintf(":%d", app.Port)
@@ -21,13 +31,23 @@ func (app *AppConfig) GetPort() string {
 // AppConf 当前项目配置
 var AppConf = &AppConfig{}
 
+// MongoConf mongo配置
+var MongoConf = &MongoConfig{}
+
 // InitConfig 初始化配置
 func InitConfig() {
-	cfg, err := ini.Load("configs/app.ini")
+	path := os.Getenv("ConfigFilePath")
+	if path == "" {
+		path = "configs/app.ini"
+	}
+	cfg, err := ini.Load(path)
 	loadFileError(err)
 	appSection := cfg.Section("app")
 	appSection.MapTo(AppConf)
 	gin.SetMode(AppConf.Env)
+
+	mongoSection := cfg.Section("mongo")
+	mongoSection.MapTo(MongoConf)
 }
 
 func loadFileError(e error) {

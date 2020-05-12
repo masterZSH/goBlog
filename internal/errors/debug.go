@@ -19,7 +19,8 @@ func isTesting() bool {
 	return configs.AppConf.Env == gin.TestMode
 }
 
-func debugPrintError(err error) {
+// DebugPrintError 调试错误
+func DebugPrintError(err error) {
 	if err != nil {
 		// todo记录日志
 		if isDebugging() {
