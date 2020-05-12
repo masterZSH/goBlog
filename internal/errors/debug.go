@@ -3,18 +3,20 @@ package errors
 import (
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/masterZSH/goBlog/configs"
 )
 
-const debugMode = "debug"
-const onlineMode = "online"
-
 func isDebugging() bool {
-	return configs.AppConf.Env == debugMode
+	return configs.AppConf.Env == gin.DebugMode
 }
 
-func isOnline() bool {
-	return configs.AppConf.Env == onlineMode
+func isReleasing() bool {
+	return configs.AppConf.Env == gin.ReleaseMode
+}
+
+func isTesting() bool {
+	return configs.AppConf.Env == gin.TestMode
 }
 
 func debugPrintError(err error) {
