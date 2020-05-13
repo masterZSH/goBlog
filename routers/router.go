@@ -11,7 +11,8 @@ func InitRouter(router *gin.Engine) {
 	v1Group := router.Group("/v1")
 	{
 		v1Group.GET("/user", v1.GetUser)
+		v1Group.POST("/articles", v1.AddArticle)
+
 	}
 
-	
 }
