@@ -30,11 +30,18 @@ func NewArticle(title, author, content string) *Article {
 }
 
 // GetBson 返回article的bson类型
+//  {
+//    "content": "test",
+//    "time": 1589447406,
+//    "title": "测试标题",
+//    "author": "eee"
+//	}
+//
 func (ar *Article) GetBson() bson.M {
 	return bson.M{
 		"title":   ar.Title,
 		"author":  ar.Author,
 		"content": ar.Content,
-		"time":    time.Now().Local(),
+		"time":    time.Now().Unix(),
 	}
 }
