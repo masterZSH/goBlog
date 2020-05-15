@@ -29,7 +29,7 @@ func AddArticle(c *gin.Context) {
 	client := db.DefaultMongoClient()
 	collection := client.GetCollection(article.ADB, article.ACOLLECTION)
 	res, err := collection.InsertOne(client.GetContext(),
-		ar.GetBson())
+		ar.NewArticleBson())
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

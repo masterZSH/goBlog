@@ -37,7 +37,16 @@ func NewArticle(title, author, content string) *Article {
 //    "author": "eee"
 //	}
 //
-func (ar *Article) GetBson() bson.M {
+func (ar *Article) NewArticleBson() bson.M {
+	return bson.M{
+		"title":   ar.Title,
+		"author":  ar.Author,
+		"content": ar.Content,
+		"time":    time.Now().Unix(),
+	}
+}
+
+func  NewAuthorFilter(author string) bson.M{
 	return bson.M{
 		"title":   ar.Title,
 		"author":  ar.Author,
