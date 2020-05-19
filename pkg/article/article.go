@@ -48,9 +48,6 @@ func (ar *Article) NewArticleBson() bson.M {
 
 func  NewAuthorFilter(author string) bson.M{
 	return bson.M{
-		"title":   ar.Title,
 		"author":  ar.Author,
-		"content": ar.Content,
-		"time":    time.Now().Unix(),
 	}
 }
