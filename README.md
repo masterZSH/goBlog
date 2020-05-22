@@ -1,6 +1,8 @@
 ## goBlog
 
-goBlog是一个博客系统，使用gin框架开发，遵循Restful接口规范，数据库存储使用mongodb。
+goBlog是一个前后端分离的通用博客系统，后端使用gin框架开发，遵循Restful接口规范，数据库存储使用mongodb。
+
+[前端仓库](https://github.com/masterZSH/vue-blog)
 
 
 
@@ -11,11 +13,14 @@ goBlog是一个博客系统，使用gin框架开发，遵循Restful接口规范�
 
 3. 构建  go build
 
+## jwt
 
 
 ## 前端 
 
-框架 vue全家桶 vue+vue-cli+vuex
+框架 vue全家桶搭建单页面应用
+
+vue+vue-cli+vuex+vue-router
 
 UI iView(桌面端) mint-ui(移动端)
 
