@@ -29,7 +29,7 @@ func NewArticle(title, author, content string) *Article {
 	}
 }
 
-// GetBson 返回article的bson类型
+// NewArticleBson 返回article的bson类型
 //  {
 //    "content": "test",
 //    "time": 1589447406,
@@ -46,11 +46,9 @@ func (ar *Article) NewArticleBson() bson.M {
 	}
 }
 
-func  NewAuthorFilter(author string) bson.M{
+// NewAuthorFilter 新建作者过滤
+func NewAuthorFilter(author string) bson.M {
 	return bson.M{
-		"title":   ar.Title,
-		"author":  ar.Author,
-		"content": ar.Content,
-		"time":    time.Now().Unix(),
+		"author": author,
 	}
 }
