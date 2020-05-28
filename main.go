@@ -10,5 +10,6 @@ func main() {
 	r := gin.Default()
 	i.Init(r)
 	r.Run(configs.AppConf.GetPort())
+	// todo tls支持
 	// r.RunTLS()
 }
