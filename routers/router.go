@@ -13,7 +13,7 @@ func InitRouter(router *gin.Engine) {
 		v1Group.GET("/user", v1.GetUser)
 		v1Group.POST("/articles", v1.AddArticle)
 		v1Group.GET("/articles", v1.GetArticles)
-
+		v1Group.OPTIONS("/articles", v1.GetArticles)
 	}
 
 }

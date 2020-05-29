@@ -71,9 +71,8 @@ func NewSortFilter() bson.D {
 // NewListOpts 生成opts
 func NewListOpts(page, size int) *options.FindOptions {
 	skip := (page - 1) * size
-	opts := options.Find().
+	return options.Find().
 		SetSkip(int64(skip)).
 		SetSort(NewSortFilter()).
 		SetLimit(int64(size))
-	return opts
 }
