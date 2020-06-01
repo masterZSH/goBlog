@@ -23,7 +23,7 @@ type MongoConfig struct {
 	TimeOut int
 }
 
-// GetPort 获取端口祖父串 ":8080"
+// GetPort 获取端口字符串 ":8080"
 func (app *AppConfig) GetPort() string {
 	return fmt.Sprintf(":%d", app.Port)
 }
