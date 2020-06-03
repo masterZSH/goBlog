@@ -101,6 +101,13 @@ func GetArticles(c *gin.Context) {
 		return
 	}
 
+	// 跨域处理
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Request-Method", "GET,POST,PUT,POST")
+
+	c.Header("Access-Control-Allow-Credentials", "true")
+	c.Header("Access-Control-Allow-Headers:x-requested-with", "x-requested-with,content-type")
+
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,
 		"msg":  "success",
