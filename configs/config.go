@@ -55,3 +55,18 @@ func loadFileError(e error) {
 		fmt.Printf("加载配置文件出错：%v\n", e)
 	}
 }
+
+// IsDebugging 是否调试
+func IsDebugging() bool {
+	return AppConf.Env == gin.DebugMode
+}
+
+// IsReleasing 是否正式
+func IsReleasing() bool {
+	return AppConf.Env == gin.ReleaseMode
+}
+
+// IsTesting 是否测试
+func IsTesting() bool {
+	return AppConf.Env == gin.TestMode
+}
