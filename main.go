@@ -11,5 +11,6 @@ func main() {
 	i.Init(r)
 	r.Run(configs.AppConf.GetPort())
 	// todo tls支持
+	// todo 签名文件生成
 	// r.RunTLS()
 }

@@ -13,14 +13,15 @@ func InitRouter(router *gin.Engine) {
 	// v1版本接口
 	v1Group := router.Group("/v1")
 	if configs.IsDebugging() {
-		v1Group.Use(middlewares.HandleOptions())
 		v1Group.Use(middlewares.Cros())
 	}
+
+	// options请求处理
+	v1Group.Use(middlewares.HandleOptions())
 
 	{
 		v1Group.GET("/user", v1.GetUser)
 		v1Group.POST("/articles", v1.AddArticle)
-
 		v1Group.GET("/articles", v1.GetArticles)
 	}
 
