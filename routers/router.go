@@ -10,18 +10,27 @@ import (
 // InitRouter 初始化路由
 func InitRouter(router *gin.Engine) {
 
-	// v1版本接口
-	v1Group := router.Group("/v1")
 	if configs.IsDebugging() {
-		v1Group.Use(middlewares.Cros())
+		router.Use(middlewares.Cros())
 	}
 
-	// options请求处理
-	v1Group.Use(middlewares.HandleOptions())
+	// options中间件  options请求处理
+	router.Use(middlewares.HandleOptions())
 
+	// Recovery中间件 任何panic会写入500
+	router.Use(gin.Recovery())
+
+	// Logger中间件 日志中间件
+	router.Use(gin.Logger())
+
+	// jwt
+	jwt := middlewares.NewJwt()
+	router.GET("/login", jwt.Login)
+
+	// v1版本接口
+	v1Group := router.Group("/v1")
 	{
-		v1Group.GET("/user", v1.GetUser)
-		v1Group.POST("/articles", v1.AddArticle)
+		v1Group.POST("/articles", jwt.IsAuth, v1.AddArticle)
 		v1Group.GET("/articles", v1.GetArticles)
 	}
 

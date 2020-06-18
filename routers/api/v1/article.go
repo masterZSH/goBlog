@@ -110,3 +110,5 @@ func GetArticles(c *gin.Context) {
 		},
 	})
 }
+
+

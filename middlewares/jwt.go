@@ -59,6 +59,8 @@ func (j *Jwt) IsAuth(c *gin.Context) {
 			"msg":  "token不存在",
 			"data": gin.H{},
 		})
+		c.Abort()
+		return
 	}
 	token, ok := j.Tokens[tokenKey]
 	// token不存在
@@ -68,15 +70,20 @@ func (j *Jwt) IsAuth(c *gin.Context) {
 			"msg":  "token失效",
 			"data": gin.H{},
 		})
+		c.Abort()
+		return
 	}
 
 	// token过期
 	if time.Now().After(token.expiredTime) {
+		delete(j.Tokens, token.content)
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"code": http.StatusUnprocessableEntity,
 			"msg":  "token已过期",
 			"data": gin.H{},
 		})
+		c.Abort()
+		return
 	}
 	c.Next()
 }
