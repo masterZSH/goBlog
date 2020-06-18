@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 
@@ -9,15 +10,25 @@ import (
 	"github.com/masterZSH/goBlog/internal/errors"
 	"github.com/masterZSH/goBlog/pkg/article"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+// Article  绑定前端传入的Article结构
+type Article struct {
+	Content string   `from:"content"`
+	Title   string   `from:"title"`
+	Author  string   `from:"author"`
+	Tags    []string `from:"tags"`
+}
 
 // AddArticle 添加文章
 func AddArticle(c *gin.Context) {
-	content := c.PostForm("content")
-	title := c.PostForm("title")
-	author := c.PostForm("author")
-
-	if content == "" || title == "" || author == "" {
+	var art Article
+	if err := c.BindJSON(&art); err != nil {
+		return
+	}
+	if art.Content == "" || art.Title == "" || art.Author == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": http.StatusBadRequest,
 			"msg":  "参数错误",
@@ -25,14 +36,11 @@ func AddArticle(c *gin.Context) {
 		})
 		return
 	}
-
-	ar := article.NewArticle(title, author, content)
-
+	ar := article.NewArticle(art.Title, art.Author, art.Content, art.Tags)
 	client := db.DefaultMongoClient()
 	collection := client.GetCollection(article.ADB, article.ACOLLECTION)
 	res, err := collection.InsertOne(client.GetContext(),
 		ar.NewArticleBson())
-
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": http.StatusInternalServerError,
@@ -111,4 +119,35 @@ func GetArticles(c *gin.Context) {
 	})
 }
 
-
+// GetArticle 获取
+func GetArticle(c *gin.Context) {
+	var result bson.M
+	id := c.Param("id")
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": http.StatusBadRequest,
+			"msg":  "参数错误",
+			"data": "",
+		})
+		return
+	}
+	// filter := article.NewArticleFilter(id)
+	client := db.DefaultMongoClient()
+	collection := client.GetCollection(article.ADB, article.ACOLLECTION)
+	oid, _ := primitive.ObjectIDFromHex(id)
+	opts := options.FindOne().SetSort(bson.D{{"time", 1}})
+	err := collection.FindOne(context.Background(), bson.D{{"_id", oid}}, opts).Decode(&result)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": http.StatusInternalServerError,
+			"msg":  err.Error(),
+			"data": "",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": http.StatusOK,
+		"msg":  "success",
+		"data": result,
+	})
+}

@@ -32,6 +32,7 @@ func InitRouter(router *gin.Engine) {
 	{
 		v1Group.POST("/articles", jwt.IsAuth, v1.AddArticle)
 		v1Group.GET("/articles", v1.GetArticles)
+		v1Group.GET("/articles/:id", v1.GetArticle)
 	}
 
 }

@@ -12,6 +12,7 @@ type Article struct {
 	Title   string
 	Author  string
 	Content string
+	Tags    []string
 }
 
 const (
@@ -26,11 +27,12 @@ const (
 )
 
 // NewArticle 创建Article
-func NewArticle(title, author, content string) *Article {
+func NewArticle(title, author, content string, tags []string) *Article {
 	return &Article{
 		title,
 		author,
 		content,
+		tags,
 	}
 }
 
@@ -47,6 +49,7 @@ func (ar *Article) NewArticleBson() bson.M {
 		"title":   ar.Title,
 		"author":  ar.Author,
 		"content": ar.Content,
+		"tags":    ar.Tags,
 		"time":    time.Now().Unix(),
 	}
 }
@@ -58,6 +61,13 @@ func NewAuthorFilter(author string) bson.M {
 	}
 	return bson.M{
 		"author": author,
+	}
+}
+
+// NewArticleFilter 新增文章过滤
+func NewArticleFilter(id string) bson.M{
+	return bson.M{
+		"_id": id,
 	}
 }
 
