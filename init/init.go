@@ -12,5 +12,4 @@ func Init(r *gin.Engine) {
 	configs.InitConfig()
 	// 初始化路由
 	routers.InitRouter(r)
-
 }

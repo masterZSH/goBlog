@@ -9,10 +9,14 @@ import (
 	"github.com/masterZSH/goBlog/internal/db"
 	"github.com/masterZSH/goBlog/internal/errors"
 	"github.com/masterZSH/goBlog/pkg/article"
+	"github.com/masterZSH/goBlog/pkg/tag"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+// 业务较简单 就放这里了
 
 // Article  绑定前端传入的Article结构
 type Article struct {
@@ -51,6 +55,51 @@ func AddArticle(c *gin.Context) {
 		return
 	}
 
+	// 添加标签
+	{
+		collection = client.GetCollection(tag.TDB, tag.TCOLLECTION)
+		tags := tag.Tags{}
+		tagsMap := make(map[string]bool)
+		err = collection.FindOne(client.GetContext(), bson.D{}).Decode(&tags)
+		// 文档为空
+		if err == mongo.ErrNoDocuments {
+			tagsBson := tag.NewTagsBson(ar.Tags)
+			res, err = collection.InsertOne(client.GetContext(), tagsBson)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"code": http.StatusInternalServerError,
+					"msg":  err.Error(),
+					"data": nil,
+				})
+				return
+			}
+		}
+
+		for _, item := range tags.Tags {
+			tagsMap[item] = true
+		}
+		for _, item := range ar.Tags {
+			if _, ok := tagsMap[item]; !ok {
+				tagsMap[item] = true
+			}
+		}
+		var tagKeys []string
+		for k := range tagsMap {
+			tagKeys = append(tagKeys, k)
+		}
+		update := bson.D{{"$set", bson.D{{"tags", tagKeys}}}}
+
+		updateRes := collection.FindOneAndUpdate(client.GetContext(), bson.D{}, update)
+		if updateRes.Err() != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code": http.StatusInternalServerError,
+				"msg":  updateRes.Err().Error(),
+				"data": nil,
+			})
+			return
+		}
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,
 		"msg":  "success",
@@ -86,6 +135,12 @@ func GetArticles(c *gin.Context) {
 
 	author := c.Query("author")
 	filter := article.NewAuthorFilter(author)
+	if c.Query("tag") != "" {
+		filter["tags"] = bson.M{
+			"$in": []string{c.Query("tag")},
+		}
+	}
+
 	client := db.DefaultMongoClient()
 	collection := client.GetCollection(article.ADB, article.ACOLLECTION)
 	opts := article.NewListOpts(page, size)
