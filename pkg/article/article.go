@@ -65,7 +65,7 @@ func NewAuthorFilter(author string) bson.M {
 }
 
 // NewArticleFilter 新增文章过滤
-func NewArticleFilter(id string) bson.M{
+func NewArticleFilter(id string) bson.M {
 	return bson.M{
 		"_id": id,
 	}
@@ -74,7 +74,7 @@ func NewArticleFilter(id string) bson.M{
 // NewSortFilter 按时间正序排序
 func NewSortFilter() bson.D {
 	return bson.D{
-		{"time", 1},
+		{"time", -1},
 	}
 }
 
