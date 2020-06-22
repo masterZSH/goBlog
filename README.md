@@ -32,4 +32,19 @@ markdown编辑器
 https://github.com/markedjs/marked
 
 
+## 优化
+
+```bash
+ab -n 4000 -c 100 http://domain:8080/v1/tags
+```
+优化前
+Requests per second:    40.95 [#/sec] (mean)
+
+引入sync.Pool优化后
+Requests per second:    980.82 [#/sec] (mean)
+
+
+
+
+
 
