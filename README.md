@@ -11,7 +11,7 @@ goBlog是一个前后端分离的极简风格博客系统，后端使用gin框�
 
 2. 调试  go run main.go
 
-3. 构建  go build
+3. 构建  go build *.go
 
 ## jwt
 简单的jwt实现
@@ -52,6 +52,9 @@ Requests per second:    980.82 [#/sec] (mean)
 ## 演示
 
 ![demo](./demo/demo.gif)
+
+## 进行中
+docker镜像构建
 
 
 
